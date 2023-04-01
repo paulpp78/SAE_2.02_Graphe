@@ -2,15 +2,15 @@ package graphe;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class GrapheLArcs implements IGraphe {
-	private List<Arc> arcs;
+	/*private*/ List<Arc> arcs;
 	/* SI attribut arcs en visibilité private add: 
 	 * public List<Arc> getArcs() {
 		return arcs;
 	}
-
 	public void setArcs(List<Arc> arcs) {
 		this.arcs = arcs;
 	}
@@ -62,17 +62,30 @@ public class GrapheLArcs implements IGraphe {
 
 	@Override
 	public void oterArc(String source, String destination) throws IllegalArgumentException{
-		 List<Arc> arcsASupprimer = new ArrayList<>(); //si plusieurs arcs à supprimer
-		 for (Arc arc : arcs) {
-			 if (arc.getSource().equals(source) && arc.getDestination().equals(destination)) {
-				 arcsASupprimer.add(arc);
-		     }
-		 }
-		     
-		 if (!arcsASupprimer.isEmpty()) 
-			 arcs.removeAll(arcsASupprimer);
-		 else
-		     throw new IllegalArgumentException("L'arc n'existe pas dans le graphe.");
+		// Trie la liste arcs par ordre alphabétique des noms de source, puis par ordre alphabétique des noms de destination
+		Collections.sort(arcs, Comparator.comparing(Arc::getSource).thenComparing(Arc::getDestination));
+		
+		int debut = 0;
+	    int fin = arcs.size() - 1;
+	    int milieu;
+	    boolean arcTrouve = false;
+	    while (debut <= fin && !arcTrouve) {
+	        milieu = (debut + fin) / 2;
+	        Arc arc = arcs.get(milieu);
+	        if (arc.getSource().equals(source) && arc.getDestination().equals(destination)) {
+	            arcs.remove(milieu);
+	            arcTrouve = true;
+	        } 
+	        else if (source.compareTo(arc.getSource()) < 0 || (source.equals(arc.getSource()) && destination.compareTo(arc.getDestination()) < 0)) 
+	            fin = milieu - 1;
+	        else 
+	            debut = milieu + 1;
+	    }
+
+	    // Si l'arc n'a pas été trouvé, on lève une exception
+	    if (!arcTrouve) {
+	        throw new IllegalArgumentException("L'arc spécifié n'existe pas dans le graphe.");
+	    }
 	}
 
 	@Override
@@ -103,6 +116,7 @@ public class GrapheLArcs implements IGraphe {
 	    
 	    return false;
 	}
+	
 	@Override
 	public List<String> getSucc(String sommet) {
 		// TODO Auto-generated method stub
@@ -127,13 +141,11 @@ public class GrapheLArcs implements IGraphe {
 		
 	}
 
-
 	@Override
 	public void oterSommet(String noeud) {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 	 public String toString() {
 	     //trier arcs avant affichage si pas déjà triés dans les autres méthodes
