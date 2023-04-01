@@ -44,9 +44,8 @@ public class Arc {
         Arc arc2 = (Arc) obj;
 
         return Objects.equals(source, arc2.source)&&
-                this.getDestination().equals(arc2.getDestination()) &&
-                this.getValuation() == arc2.getValuation();
-    }
+                this.getDestination().equals(arc2.getDestination());
 
+    }
 }
 
