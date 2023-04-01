@@ -5,13 +5,11 @@ import java.util.Collections;
 import java.util.List;
 
 public class GrapheLArcs implements IGraphe {
-	List<Arc> arcs;
+	private List<Arc> arcs;
 	/* SI attribut arcs en visibilité private add: 
 	 * public List<Arc> getArcs() {
 		return arcs;
 	}
-
-
 	public void setArcs(List<Arc> arcs) {
 		this.arcs = arcs;
 	}
