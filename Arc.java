@@ -1,5 +1,7 @@
 package graphe;
 
+import java.util.Objects;
+
 public class Arc {
     private final String source;
     private final String destination;
@@ -28,9 +30,23 @@ public class Arc {
         return source + "-" + destination + "(" + valuation + ")";
     }
     
-    public boolean equals(Arc b) {
-    	return this.getSource()== b.getSource() && this.getDestination()== b.getDestination() &&
-    			this.getValuation()== b.getValuation();
+    @Override
+    public boolean equals(Object obj) {
+        /*CF SI UTILE DE LE METTRE
+         * if (obj == this) {
+            return true;
+        }*/
+
+        if (!(obj instanceof Arc) || obj==null) {
+            return false;
+        }
+
+        Arc arc2 = (Arc) obj;
+
+        return Objects.equals(source, arc2.source)&&
+                this.getDestination().equals(arc2.getDestination()) &&
+                this.getValuation() == arc2.getValuation();
     }
+
 }
 
