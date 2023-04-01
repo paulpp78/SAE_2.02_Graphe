@@ -6,17 +6,7 @@ import java.util.List;
 
 public class GrapheLArcs implements IGraphe {
 	private List<Arc> arcs;
-	/* SI attribut arcs en visibilité private add: 
-	 * public List<Arc> getArcs() {
-		return arcs;
-	}
-
-
-	public void setArcs(List<Arc> arcs) {
-		this.arcs = arcs;
-	}
-	SINON METTRE VISIBILITE PACKAGE*/
-
+	
 	@Override
 	public List<String> getSommets() {
 		List<String> sommets= new ArrayList<String>();
