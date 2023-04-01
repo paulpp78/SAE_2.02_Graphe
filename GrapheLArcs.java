@@ -5,8 +5,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class GrapheLArcs implements IGraphe {
-	private List<Arc> arcs;
-	
+	List<Arc> arcs;
+	/* SI attribut arcs en visibilité private add: 
+	 * public List<Arc> getArcs() {
+		return arcs;
+	}
+
+
+	public void setArcs(List<Arc> arcs) {
+		this.arcs = arcs;
+	}
+	SINON METTRE VISIBILITE PACKAGE*/
+
 	@Override
 	public List<String> getSommets() {
 		List<String> sommets= new ArrayList<String>();
@@ -52,9 +62,19 @@ public class GrapheLArcs implements IGraphe {
 	}
 
 	@Override
-	public void oterArc(String source, String destination) {
-		
-		
+	public void oterArc(String source, String destination) throws IllegalArgumentException{
+		 Arc arcASupprimer = null;
+		 for (Arc arc : arcs) {
+			 if (arc.getSource().equals(source) && arc.getDestination().equals(destination)) {
+				 arcASupprimer = arc;
+		         break;
+		     }
+		 }
+		     
+		 if (arcASupprimer != null)
+			 arcs.remove(arcASupprimer);
+		 else
+		     throw new IllegalArgumentException("L'arc n'existe pas dans le graphe.");
 	}
 
 	@Override
