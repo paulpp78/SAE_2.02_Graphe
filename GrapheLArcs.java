@@ -10,6 +10,7 @@ public class GrapheLArcs implements IGraphe {
 	 * public List<Arc> getArcs() {
 		return arcs;
 	}
+
 	public void setArcs(List<Arc> arcs) {
 		this.arcs = arcs;
 	}
@@ -61,20 +62,47 @@ public class GrapheLArcs implements IGraphe {
 
 	@Override
 	public void oterArc(String source, String destination) throws IllegalArgumentException{
-		 Arc arcASupprimer = null;
+		 List<Arc> arcsASupprimer = new ArrayList<>(); //si plusieurs arcs à supprimer
 		 for (Arc arc : arcs) {
 			 if (arc.getSource().equals(source) && arc.getDestination().equals(destination)) {
-				 arcASupprimer = arc;
-		         break;
+				 arcsASupprimer.add(arc);
 		     }
 		 }
 		     
-		 if (arcASupprimer != null)
-			 arcs.remove(arcASupprimer);
+		 if (!arcsASupprimer.isEmpty()) 
+			 arcs.removeAll(arcsASupprimer);
 		 else
 		     throw new IllegalArgumentException("L'arc n'existe pas dans le graphe.");
 	}
 
+	@Override
+	public boolean contientArc(String src, String dest) {
+	    int debut = 0;
+	    int fin = arcs.size() - 1;
+	    
+	    while (debut <= fin) {
+	        int milieu = (debut + fin) / 2;
+	        Arc arc = arcs.get(milieu);
+	        
+	        int comparaison = arc.getSource().compareTo(src);
+	        if (comparaison < 0) {
+	            debut = milieu + 1;
+	        } else if (comparaison > 0) {
+	            fin = milieu - 1;
+	        } else {
+	            comparaison = arc.getDestination().compareTo(dest);
+	            if (comparaison < 0) {
+	                debut = milieu + 1;
+	            } else if (comparaison > 0) {
+	                fin = milieu - 1;
+	            } else {
+	                return true;
+	            }
+	        }
+	    }
+	    
+	    return false;
+	}
 	@Override
 	public List<String> getSucc(String sommet) {
 		// TODO Auto-generated method stub
@@ -89,12 +117,6 @@ public class GrapheLArcs implements IGraphe {
 
 	@Override
 	public boolean contientSommet(String sommet) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean contientArc(String src, String dest) {
 		// TODO Auto-generated method stub
 		return false;
 	}
