@@ -6,7 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class GrapheLArcs implements IGraphe {
-	/*private*/ List<Arc> arcs;
+	private List<Arc> arcs;
 	/* SI attribut arcs en visibilité private add: 
 	 * public List<Arc> getArcs() {
 		return arcs;
