@@ -5,8 +5,18 @@ import java.util.Collections;
 import java.util.List;
 
 public class GrapheLArcs implements IGraphe {
-	private List<Arc> arcs;
-	
+	List<Arc> arcs;
+	/* SI attribut arcs en visibilité private add: 
+	 * public List<Arc> getArcs() {
+		return arcs;
+	}
+
+
+	public void setArcs(List<Arc> arcs) {
+		this.arcs = arcs;
+	}
+	SINON METTRE VISIBILITE PACKAGE*/
+
 	@Override
 	public List<String> getSommets() {
 		List<String> sommets= new ArrayList<String>();
@@ -37,6 +47,25 @@ public class GrapheLArcs implements IGraphe {
 		return sommets;
 	}
 		
+	@Override
+	public void ajouterArc(String source, String destination, Integer valeur) throws IllegalArgumentException {
+		if (valeur < 0) {
+	        throw new IllegalArgumentException("La valeur de l'arc doit être positive : " + valeur);
+	    }
+
+	    Arc arc = new Arc(source, destination, valeur);
+	    if (arcs.contains(arc)) {
+	        throw new IllegalArgumentException("L'arc " + arc + " existe déjà dans le graphe.");
+	    }
+
+	    arcs.add(arc);
+	}
+
+	@Override
+	public void oterArc(String source, String destination) {
+		
+		
+	}
 
 	@Override
 	public List<String> getSucc(String sommet) {
@@ -68,11 +97,6 @@ public class GrapheLArcs implements IGraphe {
 		
 	}
 
-	@Override
-	public void ajouterArc(String source, String destination, Integer valeur) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public void oterSommet(String noeud) {
@@ -80,15 +104,11 @@ public class GrapheLArcs implements IGraphe {
 		
 	}
 
-	@Override
-	public void oterArc(String source, String destination) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	 public String toString() {
 	     //trier arcs avant affichage si pas déjà triés dans les autres méthodes
 		 //cf compareTO p.40 cours
 		 return null;
 	    }
+
 }
