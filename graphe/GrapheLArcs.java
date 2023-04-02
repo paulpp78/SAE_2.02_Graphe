@@ -52,7 +52,6 @@ public class GrapheLArcs implements IGraphe {
 		}
 	}
 
-
 	/**
 	 * Supprime un sommet du graphe ainsi que tous les arcs qui y sont connectés.
 	 *
@@ -265,7 +264,6 @@ public class GrapheLArcs implements IGraphe {
 		}
 		return true;
 	}
-
 
 	/**
 	 * Renvoie une représentation sous forme de chaîne de caractères du graphe.
