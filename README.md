@@ -3,8 +3,6 @@
 ## *Groupe 109 : Zghrata_Wissal -- Boukessassa Raafet -- Victor -- Perigault Paul*                          
 
 Projet Graphe et Algorithme de Dijkstra
-
-Projet Graphe et Algorithme de Dijkstra
 =======================================
 
 Ce projet implémente différentes représentations de graphes orientés valués et l'algorithme de Dijkstra pour calculer le plus court chemin dans un graphe. Les représentations de graphes implémentées sont : liste d'arcs, matrice d'adjacence, liste d'adjacence et table de hachage. L'implémentation respecte l'interface IGraphe pour les graphes modifiables et IGrapheConst pour les graphes non modifiables utilisés par l'algorithme de Dijkstra.
