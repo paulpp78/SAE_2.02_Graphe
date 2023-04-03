@@ -17,10 +17,15 @@ import java.util.Set;
 public class GrapheLArcs implements IGraphe {
 	List<Arc> arcs;
 	private Set<String> sommets;
+	
+	public GrapheLArcs() {
+	    this.arcs = new ArrayList<>();
+	    this.sommets = new HashSet<>();
+	}
 
-	public GrapheLArcs(String listeArc) {
-        arcs = new ArrayList<>(); // Initialise la liste d'arcs à une liste vide.
-        sommets = new HashSet<>(); // Initialise l'ensemble de sommets à un ensemble vide.
+
+	/*public GrapheLArcs(String listeArc) {
+        this();
         String[] arcsString = listeArc.split(", "); // Sépare la chaîne de caractères en arcs individuels.
         for (String arcString : arcsString) {
             String[] parts = arcString.split("[()]"); // Sépare l'arc en ses parties : source, destination, valuation.
@@ -31,8 +36,24 @@ public class GrapheLArcs implements IGraphe {
             sommets.add(source); // Ajoute le sommet source à l'ensemble de sommets.
             sommets.add(destination); // Ajoute le sommet destination à l'ensemble de sommets.
         }
+    } */
+	public GrapheLArcs(String chaineArcs) {
+    this();
+    String[] listeArcs = chaineArcs.split(", ");
+    for (String s : listeArcs) {
+        if (s.contains("-")) {
+            String[] parts = s.split("-");
+            String source = parts[0].trim();
+            String[] destVal = parts[1].split("\\(");
+            String destination = destVal[0].trim();
+            int valuation = Integer.parseInt(destVal[1].substring(0, destVal[1].length()-1).trim());
+            ajouterArc(source, destination, valuation);
+        } else {
+            String sommet = s.trim();
+            ajouterSommet(sommet);
+        }
     }
-	
+}
 
 
 
@@ -40,27 +61,6 @@ public class GrapheLArcs implements IGraphe {
 		Collections.sort(arcs, Comparator.comparing(Arc::getSource).thenComparing(Arc::getDestination));
 	}
 	
-	/**
-	 * @brief Vérifie si les arcs sont triés par source, puis par destination.
-	 * @return true si les arcs sont triés, false sinon.
-	 */
-	public boolean estTrie() {
-		for (int i = 0; i < arcs.size() - 1; i++) {
-			Arc arc1 = arcs.get(i);
-			Arc arc2 = arcs.get(i + 1);
-
-			if (arc1.getSource().compareTo(arc2.getSource()) > 0) {
-				return false;
-			} else if (arc1.getSource().equals(arc2.getSource()) && arc1.getDestination().compareTo(arc2.getDestination()) > 0) {
-				return false;
-			}
-		}
-		return true;
-		/*AUTRE VERSION CF SI ELLE MARCHE
-		List<Arc> arcsTrier=new ArrayList<>();
-		((GrapheLArcs) arcsTrier).trierArcs();
-		return this==arcsTrier; */
-	}
 
     @SuppressWarnings("unchecked")
 	@Override
@@ -200,20 +200,28 @@ public class GrapheLArcs implements IGraphe {
 	
 
 	//-----------------------------------------------------------------------------------
-
-	
 	@Override
 	public List<String> getSucc(String sommet) {
-		// TODO Auto-generated method stub
+		List<String> succ = new ArrayList<>();
+		for (Arc arc : arcs) {
+			if (arc.getSource().equals(sommet)) {
+				succ.add(arc.getDestination());
+			}
+		}
+		return succ;
+	}
+	/* Autre version cg:
+	 * public List<String> getSucc(String sommet) {
+    return arcs.stream()
+            .filter(arc -> arc.getSource().equals(sommet))
+            .map(Arc::getDestination)
+            .collect(Collectors.toList());
+}
+
+	 */
+	
+	@Override
+	 public String toString() {
 		return null;
 	}
-	
-	
-
-	 public String toString() {
-	     //trier arcs avant affichage si pas déjà triés dans les autres méthodes
-		 //cf compareTO p.40 cours
-		 return null;
-	    }
-
 }
