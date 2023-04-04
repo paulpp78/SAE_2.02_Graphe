@@ -61,9 +61,44 @@ public class GrapheLArcs implements IGraphe {
 		Collections.sort(arcs, Comparator.comparing(Arc::getSource).thenComparing(Arc::getDestination));
 	}
 	
-
-    @SuppressWarnings("unchecked")
+	/*@Override
+	public List<String> getSommets() {
+	    Set<String> sommets = new HashSet<>();
+	    for (Arc a : arcs) {
+	        sommets.add(a.getSource());
+	        sommets.add(a.getDestination());
+	    }
+	    String sommetIsolé = null;
+	    for (String sommet : sommets) {
+	        if (getSucc(sommet).isEmpty()) {
+	            sommetIsolé = sommet;
+	            break;
+	        }
+	    }
+	    if (sommetIsolé != null) {
+	        sommets.add(sommetIsolé);
+	    }
+	    List<String> sommetsList = new ArrayList<>(sommets);
+	    Collections.sort(sommetsList);
+	    sommetsList.remove(":");
+	    return sommetsList;
+	}*/
 	@Override
+	public List<String> getSommets() {
+	    Set<String> sommets = new HashSet<>();
+	    for (Arc a : arcs) {
+	    	String source = a.getSource().replace(":", "");
+	        String destination = a.getDestination().replace(":", "");
+	        sommets.add(source);
+	        sommets.add(destination);
+	    }
+	    
+	    List<String> sommetsList = new ArrayList<>(sommets);
+	    Collections.sort(sommetsList);
+	    return sommetsList;
+	}
+
+	/*@Override
     public List<String> getSommets() {
         Set<String> sommets = new HashSet<>();
         for (Arc a : arcs) {
@@ -73,21 +108,43 @@ public class GrapheLArcs implements IGraphe {
         //List<String> sortedSommets = new ArrayList<>(sommets);
         //Collections.sort(sortedSommets);
         //return sortedSommets;
-        return (List<String>) sommets;
+        /*--------------------------CF SI IL FAUT SORTED POUR TEST--------------------------------------------//
+        //return (List<String>) sommets;
+        return new ArrayList<>(sommets);
+
     }
-    
+	@Override
+	public List<String> getSommets() {
+	    Set<String> sommets = new HashSet<>();
+	    for (Arc a : arcs) {
+	        sommets.add(a.getSource());
+	        sommets.add(a.getDestination());
+	    }
+	    List<String> sommetsList = new ArrayList<>(sommets);
+	    sommetsList.removeIf(s -> s.endsWith(":"));
+	    return sommetsList;
+	}*/
+
 	 @Override
-	    public void ajouterArc(String source, String destination, Integer valeur) throws IllegalArgumentException {
+	  public void ajouterArc(String source, String destination, Integer valeur) throws IllegalArgumentException {
 	        if (valeur < 0) {
 	            throw new IllegalArgumentException("La valeur de l'arc doit être positive : " + valeur);
 	        }
-
-	        Arc arc = new Arc(source, destination, valeur);
-	        if (contientArc(source,destination)) {
-	            throw new IllegalArgumentException("L'arc " + arc + " existe déjà dans le graphe.");
+	        /*---cf si utile-----*/
+	        if (source.equals("") && valeur == 0 && !destination.equals("")) {
+	            this.ajouterSommet(destination);
+	             
+	        } 
+	        if(destination.equals("") && valeur==0 && !source.equals("")) {
+	        	this.ajouterSommet(source);
 	        }
-	        
-	        arcs.add(arc);
+	        /*-------------------*/
+	        else{
+	        	Arc arc = new Arc(source, destination, valeur);
+	        	if (contientArc(source,destination)) 
+		            throw new IllegalArgumentException("L'arc " + arc + " existe déjà dans le graphe.");
+	        	arcs.add(arc);
+	       }
 	        trierArcs();
 	    }
 
@@ -169,16 +226,25 @@ public class GrapheLArcs implements IGraphe {
 	
 	@Override
 	public boolean contientArc(String source, String destination) {
-		// Trie la liste arcs par ordre alphabétique pour pouvoir faire recherche dicho
-		trierArcs();
-		
+	    trierArcs();
+	    //Utile pour le toStrring pour afficher un sommet qui est un successeur mais qui n'a
+	    //aucun arc sortant
+	    if (source == null) {
+	        for (Arc arc : arcs) {
+	            if (arc.getDestination().equals(destination)) {
+	                return true;
+	            }
+	        }
+	        return false;
+	    }
+	    
 	    int debut = 0;
 	    int fin = arcs.size() - 1;
-	    
+
 	    while (debut <= fin) {
 	        int milieu = (debut + fin) / 2;
 	        Arc arc = arcs.get(milieu);
-	        
+
 	        int comparaison = arc.getSource().compareTo(source);
 	        if (comparaison < 0) {
 	            debut = milieu + 1;
@@ -197,7 +263,7 @@ public class GrapheLArcs implements IGraphe {
 	    }
 	    return false;
 	}
-	
+
 
 	//-----------------------------------------------------------------------------------
 	@Override
@@ -216,12 +282,46 @@ public class GrapheLArcs implements IGraphe {
             .filter(arc -> arc.getSource().equals(sommet))
             .map(Arc::getDestination)
             .collect(Collectors.toList());
-}
+}*/
 
-	 */
-	
+
 	@Override
-	 public String toString() {
-		return null;
+	public String toString() {
+	    StringBuilder sb = new StringBuilder();
+	    trierArcs();
+	    int valuation;
+	    List<String> sortedSommets = new ArrayList<>(sommets);
+	    boolean isLastArc = false;
+	    for (int i = 0; i < arcs.size(); i++) {
+	        Arc arc = arcs.get(i);
+	        String source = arc.getSource();
+	        String destination = arc.getDestination();
+	        valuation = arc.getValuation();
+	        if (source.equals(destination)) {
+	            if (valuation == 0) {
+	                sortedSommets.add(source);
+	            } else {
+	                sb.append(source + "-" + destination + "(" + valuation + ")");
+	            }
+	        } else {
+	            sb.append(source + "-" + destination + "(" + valuation + ")");
+	            //pour l'ajouter 1 seule fois
+	            if (getSucc(destination).isEmpty() && sortedSommets.contains(destination)) {
+	                sortedSommets.add(destination);
+	            }
+	        }
+	        // Si c'est le dernier arc, on ne met pas de virgule
+	        if (i == arcs.size() - 1) {
+	            isLastArc = true;
+	        }
+	        // On met une virgule si ce n'est pas le dernier arc
+	        if (!isLastArc) {
+	            sb.append(", ");
+	        }
+	    }
+	    sb.append(sortedSommets.toString().replaceAll("\\[|\\]", ""));
+	    Collections.sort(sortedSommets);
+	    return sb.toString();
 	}
+
 }
