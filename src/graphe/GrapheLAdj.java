@@ -237,7 +237,8 @@ public class GrapheLAdj implements IGraphe {
      */
     @Override
     public String toString() {
-        // Crée un StringBuilder pour stocker la chaîne de caractères résultante
+        return toAString();
+        /*// Crée un StringBuilder pour stocker la chaîne de caractères résultante
         StringBuilder sb = new StringBuilder();
         // Obtient la liste de tous les sommets
         List<String> sommets = getSommets();
@@ -268,6 +269,6 @@ public class GrapheLAdj implements IGraphe {
             sb.append(arc).append(", ");
         }
         // Retourne la chaîne de caractères résultante, en supprimant la dernière virgule et l'espace
-        return sb.delete(sb.length() - 2, sb.length()).toString();
+        return sb.delete(sb.length() - 2, sb.length()).toString();*/
     }
 }
