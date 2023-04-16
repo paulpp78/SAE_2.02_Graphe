@@ -160,7 +160,7 @@ public class GrapheLArcs implements IGraphe {
 	    }
 
 	// Vérifier si le sommet est toujours présent dans la liste des sommets
-    if (contientSommet(sommet)) 
+	    if (contientSommet(sommet)) 
         sommets.remove(sommet);
 	}
 	
@@ -189,7 +189,7 @@ public class GrapheLArcs implements IGraphe {
 	*/
 	@Override
 	public boolean contientArc(String source, String destination) {
-	    trierArcs();
+	    trierArcs(); //recherche dichotomique
 	    if (source == null) {
 	        for (Arc arc : arcs) {
 	            if (arc.getDestination().equals(destination)) {
@@ -243,7 +243,7 @@ public class GrapheLArcs implements IGraphe {
 	}
 	
 	/**
-	 * Renvoie une représentation sous forme de chaîne de caractères de ce graphe orienté.
+	 * Renvoie une représentation sous forme de chaîne de caractères du graphe orienté.
 	 * @return Une chaîne de caractères représentant ce graphe orienté.
 	*/
 	@Override
