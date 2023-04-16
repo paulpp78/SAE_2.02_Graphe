@@ -1,6 +1,6 @@
 # SAE_2.02_Graphe
 
-## *Groupe 109 : Zghrata_Wissal -- Boukessassa Raafet -- Victor -- Perigault Paul*                          
+## *Groupe 109 : Zghrata_Wissal -- Boukessassa Raafet -- DEGROLARD Victor -- Perigault Paul*                          
 
 Projet Graphe et Algorithme de Dijkstra
 =======================================
