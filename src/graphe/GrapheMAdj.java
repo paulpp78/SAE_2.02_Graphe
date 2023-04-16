@@ -14,24 +14,13 @@ public class GrapheMAdj extends Graphe{
     public GrapheMAdj() {
 
         indices = new HashMap<String, Integer>();
-        System.out.println("IM HERE");
         int nbSommets = 10;
         matrice = new int[nbSommets][nbSommets];
         for (int i = 0; i < nbSommets; i++) {
             for (int j = 0; j < nbSommets; j++) {
-                matrice[i][j] = 0;
+                matrice[i][j] = INFINITY;
             }
         }
-
-
-
-        for (int i = 0; i < indices.size(); i++) {
-            //for (int j = 0; j < matrice[i].length; j++) {
-            //    System.out.print(matrice[i][j] + " ");
-            //}
-            //System.out.println();
-        }
-
 
     }
 
@@ -43,7 +32,6 @@ public class GrapheMAdj extends Graphe{
 
     @Override
     public void ajouterSommet(String nomSommet) {
-        System.out.println("SOMMET: "+nomSommet);
         if (!indices.containsKey(nomSommet)) {
             int index = indices.size();
             indices.put(nomSommet, index);
@@ -52,49 +40,27 @@ public class GrapheMAdj extends Graphe{
 
     @Override
     public void ajouterArc(String nomDepart, String nomArrivee, Integer poids) {
-        System.out.println(indices);
-        System.out.println("Nom départ " + nomDepart + " - Nom arrivée " + nomArrivee);
+
+        if (poids < 0) {
+            throw new IllegalArgumentException("La valuation de l'arc ne peut pas être négative");
+        }
+
         int indexDepart = indices.get(nomDepart);
         int indexArrivee = indices.get(nomArrivee);
+
+        if(matrice[indexDepart][indexArrivee] != INFINITY){
+            throw new IllegalArgumentException("L'arc existe déjà");
+        }
+
+
         matrice[indexDepart][indexArrivee] = poids;
-
-
-        /*for (int i = 0; i < matrice.length; i++) {
-            for (int j = 0; j < matrice[i].length; j++) {
-                System.out.print(matrice[i][j] + " ");
-            }
-            System.out.println();
-        }*/
-
-        System.out.println(indices);
-
-        for (Map.Entry<String, Integer> entry : indices.entrySet()) {
-            String key = entry.getKey();
-            System.out.print(key + " ");
-        }
-        System.out.println();
-
-        for (Map.Entry<String, Integer> entry : indices.entrySet()) {
-            String key = entry.getKey();
-            Integer value = entry.getValue();
-            for (Map.Entry<String, Integer> entry2 : indices.entrySet()) {
-                String key2 = entry.getKey();
-                Integer value2 = entry2.getValue();
-                System.out.print(matrice[value][value2] + " ");
-                //System.out.print(value + "" + value2 + " ");
-            }
-            System.out.println(key + " ");
-
-
-        }
-
     }
 
     @Override
     public void oterSommet(String sommet) {
         // Vérifie si le sommet existe dans le graphe
         if (!indices.containsKey(sommet)) {
-            throw new IllegalArgumentException("Le sommet n'existe pas dans le graphe");
+            return;
         }
 
         // Obtient l'indice du sommet à retirer
@@ -149,8 +115,9 @@ public class GrapheMAdj extends Graphe{
     public List<String> getSucc(String sommet) {
         List<String> successeurs = new ArrayList<>();
         int i = indices.get(sommet);
+
         for (int j = 0; j < matrice[i].length; j++) {
-            if (matrice[i][j] == 1) {
+            if (matrice[i][j] != INFINITY) {
                 for (Map.Entry<String, Integer> entry : indices.entrySet()) {
                     if (entry.getValue() == j) {
                         successeurs.add(entry.getKey());
@@ -159,6 +126,8 @@ public class GrapheMAdj extends Graphe{
                 }
             }
         }
+
+
         return successeurs;
     }
 
@@ -191,11 +160,12 @@ public class GrapheMAdj extends Graphe{
 
     @Override
     public boolean contientArc(String nomSommetDep, String nomSommetArr) {
+
         if (!indices.containsKey(nomSommetDep) || !indices.containsKey(nomSommetArr)) {
             return false;
         }
         int indexDep = indices.get(nomSommetDep);
         int indexArr = indices.get(nomSommetArr);
-        return matrice[indexDep][indexArr] != 0;
+        return matrice[indexDep][indexArr] != INFINITY;
     }
 }
