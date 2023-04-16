@@ -12,6 +12,8 @@ public class GrapheLArcs implements IGraphe {
 	private List<Arc> arcs;
 	private Set<String> sommets;
 	private static final int valuationFactice=0, valuationInexistante= -1;
+	private static final String noeudFactice = "";
+
 	
 	/**
 	 * Constructeur par défaut. Initialise la liste d'arcs et l'ensemble de sommets.
@@ -51,9 +53,9 @@ public class GrapheLArcs implements IGraphe {
 	    for (Arc a : arcs) {
 	        String source = a.getSource().replace(":", "");
 	        String destination = a.getDestination().replace(":", "");
-	        if (source != "")
+	        if (source != noeudFactice)
 	            sommets.add(source);
-	        if (destination != "")
+	        if (destination != noeudFactice)
 	            sommets.add(destination);
 	    }
 	 //Conversion de l'ensemble en liste, pour permettre le retour
@@ -91,7 +93,7 @@ public class GrapheLArcs implements IGraphe {
 	@Override
 	public void ajouterSommet(String noeud) {
 	    if (!contientSommet(noeud))
-	        arcs.add(new Arc(noeud, "", valuationFactice));
+	        arcs.add(new Arc(noeud, noeudFactice, valuationFactice));
 	}
 	
 	/**
@@ -233,7 +235,7 @@ public class GrapheLArcs implements IGraphe {
 	public List<String> getSucc(String sommet) {
 		List<String> succ = new ArrayList<>();
 		for (Arc arc : arcs) {
-			if (arc.getSource().equals(sommet)&& !arc.getDestination().equals("") ) {
+			if (arc.getSource().equals(sommet)&& !arc.getDestination().equals(noeudFactice) ) {
 				succ.add(arc.getDestination());
 			}
 		}
