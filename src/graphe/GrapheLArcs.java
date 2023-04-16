@@ -9,8 +9,9 @@ import java.util.List;
 import java.util.Set;
 
 public class GrapheLArcs implements IGraphe {
-	List<Arc> arcs;
+	private List<Arc> arcs;
 	private Set<String> sommets;
+	private int valuationFactice=0, valuationInexistante= -1;
 	
 	/**
 	 * Constructeur par défaut. Initialise la liste d'arcs et l'ensemble de sommets.
@@ -90,7 +91,7 @@ public class GrapheLArcs implements IGraphe {
 	@Override
 	public void ajouterSommet(String noeud) {
 	    if (!contientSommet(noeud))
-	        arcs.add(new Arc(noeud, "", 0));
+	        arcs.add(new Arc(noeud, "", valuationFactice));
 	}
 	
 	/**
