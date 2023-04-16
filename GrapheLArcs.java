@@ -12,125 +12,139 @@ public class GrapheLArcs implements IGraphe {
 	List<Arc> arcs;
 	private Set<String> sommets;
 	
+	/**
+	 * Constructeur par défaut. Initialise la liste d'arcs et l'ensemble de sommets.
+	 */
 	public GrapheLArcs() {
 	    this.arcs = new ArrayList<>();
 	    this.sommets = new HashSet<>();
 	}
 
+	/**
+	 * Constructeur prenant une chaîne de caractères représentant les arcs du graphe au format "source:destination:valeur".
+	 * Les arcs sont ajoutés à la liste d'arcs du graphe.
+	 * @param str La chaîne de caractères représentant les arcs du graphe.
+	 */
 	public GrapheLArcs(String str) {
-		this();
-		peupler(str);
- 
+	    this();
+	    peupler(str);
 	}
 
+	/**
+	 * Trie la liste d'arcs par ordre alphabétique de leur sommet source, puis par ordre alphabétique de leur sommet destination.
+	 */
 	public void trierArcs() {
-		Collections.sort(arcs, Comparator.comparing(Arc::getSource).thenComparing(Arc::getDestination));
+	    Collections.sort(arcs, Comparator.comparing(Arc::getSource).thenComparing(Arc::getDestination));
 	}
-	
 
+	
+	/**
+	 * Retourne la liste des sommets du graphe.
+	 * Les sommets sont extraits à partir de la liste d'arcs.
+	 * @return La liste des sommets du graphe.
+	 */
 	@Override
 	public List<String> getSommets() {
+	   //Création d'un ensemble pour stocker les sommets sans doublons
 	    Set<String> sommets = new HashSet<>();
 	    for (Arc a : arcs) {
-	    	String source = a.getSource().replace(":", "");
+	        String source = a.getSource().replace(":", "");
 	        String destination = a.getDestination().replace(":", "");
-	        sommets.add(source);
-	        sommets.add(destination);
+	        if (source != "")
+	            sommets.add(source);
+	        if (destination != "")
+	            sommets.add(destination);
 	    }
-	    
+	 //Conversion de l'ensemble en liste, pour permettre le retour
 	    List<String> sommetsList = new ArrayList<>(sommets);
 	    //Collections.sort(sommetsList);
 	    return sommetsList;
 	}
 
-	/*@Override
-    public List<String> getSommets() {
-        Set<String> sommets = new HashSet<>();
-        for (Arc a : arcs) {
-            sommets.add(a.getSource());
-            sommets.add(a.getDestination());
-        }
-        //List<String> sortedSommets = new ArrayList<>(sommets);
-        //Collections.sort(sortedSommets);
-        //return sortedSommets;
-        /*--------------------------CF SI IL FAUT SORTED POUR TEST--------------------------------------------//
-        //return (List<String>) sommets;
-        return new ArrayList<>(sommets);
-
-    }
+	
+	/**
+	 * Ajoute un arc au graphe avec les sommets source et destination et la valuation spécifiés.
+	 * @param source  Le sommet source de l'arc.
+	 * @param destination Le sommet destination de l'arc.
+	 * @param valeur  La valuation de l'arc.
+	 * @throws IllegalArgumentException Si la valuation est négative ou si l'arc existe déjà dans le graphe.
+	 */
 	@Override
-	public List<String> getSommets() {
-	    Set<String> sommets = new HashSet<>();
-	    for (Arc a : arcs) {
-	        sommets.add(a.getSource());
-	        sommets.add(a.getDestination());
+	public void ajouterArc(String source, String destination, Integer valeur) throws IllegalArgumentException {
+	    if (valeur < 0) {
+	        throw new IllegalArgumentException("La valeur de l'arc doit être positive : " + valeur);
+	    } else {
+	        Arc arc = new Arc(source, destination, valeur);
+	        if (contientArc(source, destination))
+	            throw new IllegalArgumentException("L'arc " + arc + " existe déjà dans le graphe.");
+	        arcs.add(arc);
 	    }
-	    List<String> sommetsList = new ArrayList<>(sommets);
-	    sommetsList.removeIf(s -> s.endsWith(":"));
-	    return sommetsList;
-	}*/
-
-	 @Override
-	  public void ajouterArc(String source, String destination, Integer valeur) throws IllegalArgumentException {
-	        if (valeur < 0) {
-	            throw new IllegalArgumentException("La valeur de l'arc doit être positive : " + valeur);
-	        }
-	        /*---cf si utile-----*/
-	        if (source.equals("") && valeur == 0 && !destination.equals("")) {
-	            this.ajouterSommet(destination);
-	             
-	        } 
-	        if(destination.equals("") && valeur==0 && !source.equals("")) {
-	        	this.ajouterSommet(source);
-	        }
-	        /*-------------------*/
-	        else{
-	        	Arc arc = new Arc(source, destination, valeur);
-	        	if (contientArc(source,destination)) 
-		            throw new IllegalArgumentException("L'arc " + arc + " existe déjà dans le graphe.");
-	        	arcs.add(arc);
-	       }
-	        trierArcs();
-	    }
-
-
-	@Override
-	public void ajouterSommet(String noeud) {
-		if (!contientSommet(noeud)) 
-			arcs.add(new Arc(noeud, noeud, 0));
+	    //trierArcs(); //d'après toAString pas forcément utile
 	}
 
+	
+	/**
+	 * Ajoute un sommet au graphe s'il n'existe pas déjà.
+	 * @param noeud le nom du sommet à ajouter
+	 */ 
+	@Override
+	public void ajouterSommet(String noeud) {
+	    if (!contientSommet(noeud))
+	        arcs.add(new Arc(noeud, "", 0));
+	}
+	
+	/**
+	 * Retire l'arc spécifié par sa source et sa destination du graphe, et ajoute les sommets orphelins
+	 * si nécessaire.
+	 * @param source la source de l'arc à retirer
+	 * @param destination la destination de l'arc à retirer
+	 * @throws IllegalArgumentException si l'arc spécifié n'existe pas dans le graphe
+	 */
 	@Override
 	public void oterArc(String source, String destination) throws IllegalArgumentException {
 	    if (!contientArc(source, destination)) {
 	        throw new IllegalArgumentException("L'arc spécifié n'existe pas dans le graphe.");
 	    }
-	    else {
-	    	//CF AUTRE VERSION AVEC ITERATOR DANS ...
-	        Arc arc = new Arc(source, destination, getValuation(source, destination));
-	        arcs.remove(arc);
-	        // Retirer les sommets impliqués dans l'arc supprimé de la liste sommets
-	        sommets.remove(source);
-	        sommets.remove(destination);
+
+	    // sauvegarde des sommets avant de retirer l'arc
+	    List<String> sommetsAvantRetraitArc = new ArrayList<>(getSommets());
+
+	    arcs.remove(new Arc(source, destination, getValuation(source, destination)));
+
+	    // vérifie si des sommets sont devenus orphelins et les ajoute si nécessaire
+	    for (String sommet : sommetsAvantRetraitArc) {
+	        if (getSucc(sommet).isEmpty() && !contientSommet(sommet)) {
+	            ajouterSommet(sommet);
+	        }
 	    }
 	}
+
 	
-    @Override
-    public int getValuation(String source, String destination) throws IllegalArgumentException {
-        if (!contientArc(source, destination)) {
-            throw new IllegalArgumentException("L'arc spécifié n'existe pas dans le graphe.");
-        }
+	/**
+	 * Renvoie la valuation de l'arc spécifié par sa source et sa destination.
+	 * @param source la source de l'arc dont on veut la valuation
+	 * @param destination la destination de l'arc dont on veut la valuation
+	 * @return la valuation de l'arc spécifié, ou -1 si l'un ou l'autre des sommets n'existe pas dans le graphe
+	 */
+	@Override
+	public int getValuation(String source, String destination){
+	    if (!(contientSommet(source) && contientSommet(destination))) {
+	       return -1;
+	    }
 
-        for (Arc arc : arcs) {
-            if (arc.getSource().equals(source) && arc.getDestination().equals(destination)) {
-                return arc.getValuation();
-            }
-        }
-		return -1;
- 
-    }
-
-    //CF AUTRE VERSION oterSommet ...
+	    for (Arc arc : arcs) {
+	        if (arc.getSource().equals(source) && arc.getDestination().equals(destination)) {
+	            return arc.getValuation();
+	        }
+	    }
+	    return -1;
+	}
+	
+	/**
+	 * Retire un sommet du graphe en supprimant tous les arcs qui lui sont liés.
+	 * @param sommet le sommet à retirer du graphe
+	*/
+    //à modifier
 	@Override
 	public void oterSommet(String sommet) {
 	    // Création d'un HashSet pour stocker les arcs
@@ -141,9 +155,17 @@ public class GrapheLArcs implements IGraphe {
 	            oterArc(arc.getSource(), arc.getDestination());
 	        
 	    }
+
+	// Vérifier si le sommet est toujours présent dans la liste des sommets
+    if (contientSommet(sommet)) 
+        sommets.remove(sommet);
 	}
 	
-		
+	/**
+	 * Vérifie si le graphe contient un sommet spécifié.
+	 * @param noeud le sommet à vérifier
+	 * @return true si le graphe contient le sommet, false sinon
+	*/
 	@Override
 	public boolean contientSommet(String noeud) {
 	    for (Arc arc : arcs) {
@@ -154,7 +176,14 @@ public class GrapheLArcs implements IGraphe {
 	    return false;
 	}
 
-	
+	/**
+	 * Vérifie si un arc existe entre deux sommets spécifiés.
+	 * Si source est nulle, renvoie true si au moins un arc arrive à destination.
+	 * Trie d'abord les arcs pour pouvoir mettre en place une recherche dichotomique.
+	 * @param source Le sommet source de l'arc.
+	 * @param destination Le sommet destination de l'arc.
+	 * @return True si l'arc existe dans le graphe, False sinon.
+	*/
 	@Override
 	public boolean contientArc(String source, String destination) {
 	    trierArcs();
@@ -192,62 +221,31 @@ public class GrapheLArcs implements IGraphe {
 	    }
 	    return false;
 	}
-
-
+	
+	
+	/**
+	 * Renvoie une liste des sommets de destination atteignables à partir d'un sommet source spécifié.
+	 * @param sommet Le sommet source à partir duquel rechercher les arcs sortants.
+	 * @return Une liste des sommets de destination atteignables à partir du sommet source spécifié.
+	*/
 	@Override
 	public List<String> getSucc(String sommet) {
 		List<String> succ = new ArrayList<>();
 		for (Arc arc : arcs) {
-			if (arc.getSource().equals(sommet)&& !arc.getDestination().equals(sommet)) {
+			if (arc.getSource().equals(sommet)&& !arc.getDestination().equals("") ) {
 				succ.add(arc.getDestination());
 			}
 		}
 		return succ;
 	}
 	
-	
-	/* ANCIENNE VERSION TOSTRING MAIS AVEC ERREUR
+	/**
+	 * Renvoie une représentation sous forme de chaîne de caractères de ce graphe orienté.
+	 * @return Une chaîne de caractères représentant ce graphe orienté.
+	*/
 	@Override
 	public String toString() {
-	    StringBuilder sb = new StringBuilder();
-	    trierArcs();
-	    int valuation;
-	    List<String> sortedSommets = new ArrayList<>(sommets);
-	    // trier les sommets
-	    Collections.sort(sortedSommets);
-	    boolean isLastArc = false;
-	    for (int i = 0; i < arcs.size(); i++) {
-	        Arc arc = arcs.get(i);
-	        String source = arc.getSource();
-	        String destination = arc.getDestination();
-	        valuation = arc.getValuation();
-	        if (source.equals(destination)) {
-	            if (valuation == 0) {
-	                sortedSommets.remove(source);
-	            } else {
-	                sb.append(source + "-" + destination + "(" + valuation + ")");
-	            }
-	        } else {
-	            sb.append(source + "-" + destination + "(" + valuation + ")");
-	        }
-	        // Si c'est le dernier arc, on ne met pas de virgule
-	        if (i == arcs.size() - 1) {
-	            isLastArc = true;
-	        }
-	        // On met une virgule si ce n'est pas le dernier arc
-	        if (!isLastArc) {
-	            sb.append(", ");
-	        }
-	    }
-	    // ajouter les sommets non reliés aux autres
-	    for (String s : sortedSommets) {
-	        sb.append(s + ":");
-	    }
-	    return sb.toString();
-	}*/
-	
-	@Override
-	public String toString() {
+		trierArcs();
 		return toAString();
 	}
 }
