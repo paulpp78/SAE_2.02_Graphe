@@ -1,13 +1,14 @@
 package graphe;
 
-import java.util.List;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-public class AppliGrapheLAdj {
 
+import static org.junit.Assert.*;
+public class AppliGrapheLAdj {
 
     @Test
     public void testAjouterSommet() {
@@ -26,6 +27,10 @@ public class AppliGrapheLAdj {
         GrapheLAdj g = new GrapheLAdj();
         g.ajouterArc("A", "B", 3);
         g.ajouterArc("A", "C", 4);
+        assertTrue(g.contientSommet("A"));
+        assertTrue(g.contientSommet("B"));
+        assertTrue(g.contientSommet("C"));
+        assertTrue(g.getValuation("A","B") == 3);
         assertTrue(g.contientArc("A", "B"));
         assertTrue(g.contientArc("A", "C"));
         assertFalse(g.contientArc("B", "A"));
