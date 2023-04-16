@@ -11,7 +11,7 @@ import java.util.Set;
 public class GrapheLArcs implements IGraphe {
 	private List<Arc> arcs;
 	private Set<String> sommets;
-	private int valuationFactice=0, valuationInexistante= -1;
+	private static final int valuationFactice=0, valuationInexistante= -1;
 	
 	/**
 	 * Constructeur par défaut. Initialise la liste d'arcs et l'ensemble de sommets.
@@ -130,7 +130,7 @@ public class GrapheLArcs implements IGraphe {
 	@Override
 	public int getValuation(String source, String destination){
 	    if (!(contientSommet(source) && contientSommet(destination))) {
-	       return -1;
+	       return valuationInexistante;
 	    }
 
 	    for (Arc arc : arcs) {
@@ -138,7 +138,7 @@ public class GrapheLArcs implements IGraphe {
 	            return arc.getValuation();
 	        }
 	    }
-	    return -1;
+	    return valuationInexistante;
 	}
 	
 	/**
