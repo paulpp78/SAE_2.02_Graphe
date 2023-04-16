@@ -1,41 +1,65 @@
 package graphe;
+
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
 
-public class GrapheHHAdj implements IGraphe {
+public class GrapheHHAdj extends Graphe{
+    private Map<String, Map<String,Integer>> hhadj;
 
-    private Map<String, Map<String, Integer>> hhadj;
+
 
     public GrapheHHAdj() {
+
         hhadj = new HashMap<>();
     }
 
-    @Override
-    public void ajouterSommet(String sommet) {
-        hhadj.putIfAbsent(sommet, new HashMap<>());
+    public GrapheHHAdj(String string){
+        this();
+        peupler(string);
     }
 
     @Override
-    public void oterSommet(String sommet) {
-        hhadj.remove(sommet);
-        for (Map.Entry<String, Map<String, Integer>> entry : hhadj.entrySet()) {
-            entry.getValue().remove(sommet);
+    public void ajouterSommet(String noeud) {
+        if (!contientSommet(noeud))
+            hhadj.put(noeud, new HashMap<>());
+    }
+
+    @Override
+    public void ajouterArc(String source, String destination, Integer valeur) {
+        if(valeur<0){
+            throw new IllegalArgumentException("Valeur invalide");
+        }
+        if(contientArc(source, destination)) {
+            throw new IllegalArgumentException("Arc déjà existante");
+        }
+        if(!contientSommet(source)){
+            ajouterSommet(source);
+        }
+        if(!contientSommet(destination)){
+            ajouterSommet(destination);
+        }
+        hhadj.get(source).put(destination, valeur);
+    }
+
+    @Override
+    public void oterSommet(String noeud) {
+        if(contientSommet(noeud)) {
+            for (Map<String, Integer> voisins : hhadj.values()) {
+                voisins.remove(noeud);
+            }
+            hhadj.remove(noeud);
         }
     }
 
     @Override
-    public void ajouterArc(String src, String dest, int valuation) {
-        ajouterSommet(src);
-        ajouterSommet(dest);
-        hhadj.get(src).put(dest, valuation);
-    }
-
-    @Override
-    public void oterArc(String src, String dest) {
-        Map<String, Integer> adjacents = hhadj.get(src);
-        if (adjacents != null) {
-            adjacents.remove(dest);
+    public void oterArc(String source, String destination) {
+        if (contientArc(source, destination)) {
+            hhadj.get(source).remove(destination);
+        }
+        else {
+            throw new IllegalArgumentException("Arc inexistante");
         }
     }
 
@@ -46,58 +70,34 @@ public class GrapheHHAdj implements IGraphe {
 
     @Override
     public List<String> getSucc(String sommet) {
-        Map<String, Integer> adjacents = hhadj.get(sommet);
-        if (adjacents != null) {
-            return new ArrayList<>(adjacents.keySet());
-        } else {
-            return new ArrayList<>();
-        }
+        return (contientSommet(sommet))? new ArrayList<>(hhadj.get(sommet).keySet()):null;
     }
+
 
     @Override
     public int getValuation(String src, String dest) {
-        Map<String, Integer> adjacents = hhadj.get(src);
-        if (adjacents != null) {
-            Integer valuation = adjacents.get(dest);
-            if (valuation != null) {
-                return valuation;
+        if(contientSommet(src) && contientSommet(dest)) {
+            if (contientArc(src, dest)) {
+                return hhadj.get(src).get(dest);
+            }
+            else {
+                return -1; // ou une autre valeur qui indique que l'arc n'existe pas
             }
         }
-        return -1;
+        else {
+            throw new IllegalArgumentException("Sommet inexistante");
+        }
     }
+
 
     @Override
     public boolean contientSommet(String sommet) {
         return hhadj.containsKey(sommet);
     }
 
+
     @Override
     public boolean contientArc(String src, String dest) {
-        Map<String, Integer> adjacents = hhadj.get(src);
-        if (adjacents != null) {
-            return adjacents.containsKey(dest);
-        } else {
-            return false;
-        }
+        return contientSommet(src) && hhadj.get(src).containsKey(dest);
     }
-
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<String, Map<String, Integer>> entry : hhadj.entrySet()) {
-            String src = entry.getKey();
-            for (Map.Entry<String, Integer> adj : entry.getValue().entrySet()) {
-                String dest = adj.getKey();
-                int valuation = adj.getValue();
-                sb.append(src).append("-").append(dest).append("(").append(valuation).append("), ");
-            }
-        }
-        return sb.toString();
-    }
-
-	@Override
-	public void ajouterArc(String source, String destination, Integer valeur) {
-		// TODO Auto-generated method stub
-		
-	}
 }
