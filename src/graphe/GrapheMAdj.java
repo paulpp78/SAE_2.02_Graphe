@@ -156,8 +156,6 @@ public class GrapheMAdj extends Graphe{
         return indices.containsKey(sommet);
 
     }
-
-
     @Override
     public boolean contientArc(String nomSommetDep, String nomSommetArr) {
 

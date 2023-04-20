@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 
 class IGrapheTest {
+
 	private final String graphesRep = "graphes/";
 	private final String reponsesRep = "reponses/";
 

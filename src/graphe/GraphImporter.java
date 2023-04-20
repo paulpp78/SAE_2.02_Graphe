@@ -53,7 +53,6 @@ public class GraphImporter {
 		File file = new File(filePath);
 		return importer(file, g);
 	}
-
 	public static Arc importer(File file, IGraphe g)  {
 		try (Scanner sc = new Scanner(file)) {
 			String line;

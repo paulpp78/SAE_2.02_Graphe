@@ -42,7 +42,6 @@ public class AppliGrapheLAdj {
         GrapheLAdj g = new GrapheLAdj();
         g.ajouterArc("A", "B", -1);
     }
-
     @Test(expected = IllegalArgumentException.class)
     public void testAjouterArcExistant() {
         GrapheLAdj g = new GrapheLAdj();

@@ -32,7 +32,6 @@ public interface IGrapheConst {
 	            }
 	        }
 	    }
-
 	    return String.join(", ", descriptionsArcs);
 	}
 }

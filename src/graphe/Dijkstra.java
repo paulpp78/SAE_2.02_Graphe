@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.PriorityQueue;
 
 public class Dijkstra {
-
     public static List<String> dijkstra(IGrapheConst graphe, String depart, Map<String, Integer> dist, Map<String, String> prev) {
         PriorityQueue<String> nonVisites = new PriorityQueue<>(graphe.getSommets().size(), (s1, s2) -> dist.getOrDefault(s1, Integer.MAX_VALUE) - dist.getOrDefault(s2, Integer.MAX_VALUE));
 
