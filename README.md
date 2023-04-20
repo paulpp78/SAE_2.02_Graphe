@@ -13,6 +13,9 @@ Partie I : Représentation des graphes orientés valués
 Les différentes représentations de graphes sont implémentées dans des classes dédiées qui respectent l'interface IGraphe. Les nœuds sont identifiés par une chaîne de caractères et un graphe ne contient pas de valuation négative. Toutes les classes de graphes ont un constructeur avec une chaîne de la forme "A-B(5), A-C(10), B-C(3), C-D(8), E:" qui décrit un graphe avec les sommets A,B,C,D,E et les arcs A vers B de valuation 5, A vers C de valuation 10 etc. Notez que E n’a pas d’arcs sortants.
 
 
+
+=======
+
 Les différentes classes de graphes implémentées sont :
 
 *   GrapheLArcs : représente un graphe à l'aide d'une liste d'arcs.

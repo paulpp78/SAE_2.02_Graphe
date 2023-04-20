@@ -8,6 +8,8 @@ import java.util.ArrayList;
 public class GrapheHHAdj extends Graphe{
     private Map<String, Map<String,Integer>> hhadj;
 
+
+
     public GrapheHHAdj() {
 
         hhadj = new HashMap<>();

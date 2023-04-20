@@ -2,6 +2,7 @@ package graphe;
 
 import java.util.Objects;
 
+
 /**
  * Cette classe représente un arc dans un graphe.
  */
