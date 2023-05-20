@@ -29,6 +29,6 @@ Partie II : Algorithme du plus court chemin de Dijkstra
 L'algorithme de Dijkstra est implémenté sur l'interface IGrapheConst sans utiliser explicitement les classes de graphes.
 
 Partie III : Étude comparative des différentes représentations
---------------------------------------------------------------
+------------------------------------------------------------
 
 Cette partie vise à comparer l'efficacité en temps et en espace des différentes représentations de graphes implémentées lors de la première partie.
