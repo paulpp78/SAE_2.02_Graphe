@@ -32,3 +32,20 @@ Partie III : Étude comparative des différentes représentations
 ------------------------------------------------------------
 
 Cette partie vise à comparer l'efficacité en temps et en espace des différentes représentations de graphes implémentées lors de la première partie.
+
+
+Tests : La réussites des tests fournis sur Moodle
+--------------------------------------------------
+Orig : 
+-------
+      Les graphes GrapheLAdj et GrapheHHAdj réussissent jusqu'à la taille 1000000-1, tandis que GrapheMAdj et GrapheLArcs réussissent jusqu'à la taille Orig 10000-1.
+     
+Barabasi :
+-------
+      Les graphes GrapheLAdj et GrapheHHAdj réussissent jusqu'à la taille 1000002-1, tandis que GrapheMAdj et GrapheLArcs réussissent jusqu'à la taille 10002-1.
+     
+Full :
+-------
+    Les graphes GrapheMAdj, GrapheLAdj et GrapheHHAdj réussissent jusqu'à la taille 5001-1, tandis que le graphe GrapheLArcs réussit jusqu'à la taille 301-1.
+
+
