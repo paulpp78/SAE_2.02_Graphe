@@ -47,5 +47,9 @@ Barabasi :
 Full :
 -------
     Les graphes GrapheMAdj, GrapheLAdj et GrapheHHAdj réussissent jusqu'à la taille 5001-1, tandis que le graphe GrapheLArcs réussit jusqu'à la taille 301-1.
+    
+Autres :
+-------
+      Les quatre graphes ont réussi.
 
 
