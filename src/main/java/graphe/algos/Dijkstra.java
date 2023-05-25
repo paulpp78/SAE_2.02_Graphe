@@ -24,7 +24,7 @@ public class Dijkstra {
      * @return une liste contenant tous les sommets du graphe, triée par ordre alphabétique.
      */
     public static List<String> dijkstra(IGrapheConst graphe, String depart, Map<String, Integer> dist, Map<String, String> prev) {
-        PriorityQueue<String> nonVisites = new PriorityQueue<>(graphe.getSommets().size(), (s1, s2) -> dist.getOrDefault(s1, Integer.MAX_VALUE) - dist.getOrDefault(s2, Integer.MAX_VALUE));
+        PriorityQueue<String> nonVisites = new PriorityQueue<>(Comparator.comparingInt(dist::get)); //Edit au 24, pour accélérer les calculs, on arrête de vérifier inutilement des arguments, sachant que la classe native Comparator permet de faire ce que l'on recherche.
 
         dist.put(depart, 0);
         nonVisites.add(depart);
@@ -32,10 +32,8 @@ public class Dijkstra {
         while (!nonVisites.isEmpty()) {
             String sommetCourant = nonVisites.poll();
 
-            for (String successeur : graphe.getSucc(sommetCourant)) {
-                if (!graphe.contientArc(sommetCourant, successeur)) {
-                    continue;
-                }
+             for (String successeur : graphe.getSucc(sommetCourant)) {
+                 //Edit au 24, Suppression de la vérification inutile de l'arc dans la liste, il y est forcément.
 
                 int poidsArc = graphe.getValuation(sommetCourant, successeur);
                 int distanceViaSommetCourant = dist.get(sommetCourant) + poidsArc;
@@ -43,6 +41,7 @@ public class Dijkstra {
                 if (!dist.containsKey(successeur) || distanceViaSommetCourant < dist.get(successeur)) {
                     dist.put(successeur, distanceViaSommetCourant);
                     prev.put(successeur, sommetCourant);
+                    nonVisites.remove(successeur); //Edit au 24, Libération mémoire après test, cette action fait gagner 1s !
                     nonVisites.add(successeur);
                 }
             }
@@ -61,6 +60,7 @@ public class Dijkstra {
     public static List<String> plusCourtChemin(IGrapheConst graphe, String depart, String arrivee) {
         Map<String, Integer> distance = new HashMap<>();
         Map<String, String> predecesseur = new HashMap<>();
+
 
         dijkstra(graphe, depart, distance, predecesseur);
 
