@@ -41,8 +41,10 @@ public class Dijkstra {
                 if (!dist.containsKey(successeur) || distanceViaSommetCourant < dist.get(successeur)) {
                     dist.put(successeur, distanceViaSommetCourant);
                     prev.put(successeur, sommetCourant);
-                    nonVisites.remove(successeur); //Edit au 24, Libération mémoire après test, cette action fait gagner 1s !
-                    nonVisites.add(successeur);
+                    if(!(distanceViaSommetCourant < dist.get(successeur))){ //Edit au 29, par rapport à Dijkstra cette vérification évite de repasser sur des sommets
+                        nonVisites.remove(successeur); //Edit au 24, Libération mémoire après test, cette action fait gagner 1s !
+                        nonVisites.add(successeur);
+                    }
                 }
             }
         }
